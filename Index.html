@@ -1,15 +1,12 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="id">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Maze Solver By Oslo — Smart Threshold</title>
+<title>Maze Solver By Oslo</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Exo+2:wght@400;600;700;900&family=JetBrains+Mono:wght@400;600&family=DM+Sans:wght@400;500&display=swap" rel="stylesheet">
 <style>
-/* ════════════════════════════════════════
-   DESIGN TOKENS
-   ════════════════════════════════════════ */
 :root {
   --bg:       #060810;
   --surface:  #0d1020;
@@ -17,7 +14,6 @@
   --sf3:      #1a2035;
   --bd:       #1f2b4a;
   --bd2:      #263450;
-
   --cyan:     #06d6f0;
   --c-dim:    rgba(6,214,240,0.12);
   --c-glow:   rgba(6,214,240,0.3);
@@ -30,7 +26,6 @@
   --text:     #c8d8f0;
   --muted:    #4a5a7a;
   --label:    #8898b8;
-
   --fh: 'Exo 2', sans-serif;
   --fb: 'DM Sans', sans-serif;
   --fm: 'JetBrains Mono', monospace;
@@ -52,7 +47,6 @@ body {
   background-size: 40px 40px;
 }
 
-/* ── Header ── */
 .header { text-align: center; margin-bottom: 26px; }
 .header h1 {
   font-family: var(--fh); font-weight: 900;
@@ -69,10 +63,8 @@ body {
 }
 .header .tagline b { color: var(--cyan); font-weight: 600; }
 
-/* ── Shell ── */
 .shell { width: 100%; max-width: 900px; display: flex; flex-direction: column; gap: 10px; }
 
-/* ── Panel ── */
 .panel {
   background: var(--surface); border: 1px solid var(--bd);
   border-radius: var(--rlg); padding: 16px 18px;
@@ -82,12 +74,7 @@ body {
   content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
   background: linear-gradient(90deg, transparent, var(--cyan), transparent); opacity: .35;
 }
-.panel-title {
-  font-family: var(--fm); font-size: .68rem; text-transform: uppercase;
-  letter-spacing: .1em; color: var(--muted); margin-bottom: 10px;
-}
 
-/* ── Upload ── */
 .upload-zone {
   border: 2px dashed var(--bd2); border-radius: var(--rmd);
   padding: 26px; text-align: center; cursor: pointer;
@@ -101,7 +88,6 @@ body {
 .upload-zone p { margin-top: 7px; font-size: .875rem; color: var(--label); }
 .upload-zone strong { color: var(--text); }
 
-/* ── Toolbar ── */
 .toolbar { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
 
 .btn {
@@ -112,6 +98,7 @@ body {
   cursor: pointer; transition: all .15s; white-space: nowrap;
 }
 .btn:disabled { opacity: .3; cursor: not-allowed; }
+
 .btn-ghost { background: var(--sf2); color: var(--label); border-color: var(--bd); }
 .btn-ghost:hover:not(:disabled) { border-color: var(--bd2); color: var(--text); }
 .btn-ghost.active {
@@ -125,6 +112,11 @@ body {
 .btn-violet { background: rgba(167,139,250,.12); border-color: rgba(167,139,250,.35); color: var(--violet); }
 .btn-violet:hover:not(:disabled) { background: rgba(167,139,250,.22); }
 .btn-violet.active { box-shadow: 0 0 8px rgba(167,139,250,.4); }
+
+/* ── Tombol Export (hijau lime) ── */
+.btn-lime { background: rgba(57,211,83,.12); border-color: rgba(57,211,83,.35); color: var(--lime); }
+.btn-lime:hover:not(:disabled) { background: rgba(57,211,83,.22); box-shadow: 0 0 8px rgba(57,211,83,.4); }
+
 .sep { width: 1px; height: 24px; background: var(--bd); margin: 0 2px; }
 
 /* ── Threshold Panel ── */
@@ -137,17 +129,11 @@ body {
   content: ''; position: absolute; top: 0; left: 0; right: 0; height: 2px;
   background: linear-gradient(90deg, transparent, var(--violet), transparent); opacity: .5;
 }
-
-.thresh-row {
-  display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 10px;
-}
-
+.thresh-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-bottom: 10px; }
 .thresh-label {
   font-family: var(--fm); font-size: .68rem; text-transform: uppercase;
   letter-spacing: .1em; color: var(--muted); margin-bottom: 8px;
 }
-
-/* Slider */
 .slider-wrap { display: flex; align-items: center; gap: 8px; flex: 1; min-width: 200px; }
 
 input[type=range] {
@@ -166,36 +152,27 @@ input[type=range]::-moz-range-thumb {
   width: 14px; height: 14px; border-radius: 50%;
   background: var(--cyan); border: 2px solid var(--bg); cursor: pointer;
 }
-
 .thresh-num {
   font-family: var(--fm); font-size: .82rem; font-weight: 600;
   color: var(--cyan); min-width: 28px; text-align: right;
 }
-
-/* Histogram */
 .hist-wrap {
   position: relative; border-radius: var(--rsm); overflow: hidden;
   border: 1px solid var(--bd); background: #000;
 }
-#histCanvas {
-  display: block; width: 100%; height: 52px;
-}
-
+#histCanvas { display: block; width: 100%; height: 52px; }
 .hist-legend {
   display: flex; justify-content: space-between;
   font-family: var(--fm); font-size: .62rem; color: var(--muted);
   margin-top: 4px; padding: 0 2px;
 }
-
-/* Preview info */
 .preview-hint {
   margin-top: 8px; font-size: .78rem; color: var(--label);
   display: flex; align-items: center; gap: 6px;
 }
-.preview-hint .dot-g  { width: 8px; height: 8px; border-radius: 2px; background: #39d353; flex-shrink:0; }
-.preview-hint .dot-r  { width: 8px; height: 8px; border-radius: 2px; background: #ef4444; flex-shrink:0; }
+.preview-hint .dot-g { width:8px; height:8px; border-radius:2px; background:#39d353; flex-shrink:0; }
+.preview-hint .dot-r { width:8px; height:8px; border-radius:2px; background:#ef4444; flex-shrink:0; }
 
-/* ── Status Bar ── */
 .status-bar {
   display: flex; align-items: center; gap: 10px;
   padding: 10px 14px; background: var(--sf2);
@@ -205,7 +182,6 @@ input[type=range]::-moz-range-thumb {
 }
 .status-icon { font-size: 1rem; flex-shrink: 0; }
 
-/* ── Progress ── */
 .progress-track {
   height: 3px; background: var(--sf3);
   border-radius: 99px; overflow: hidden; display: none;
@@ -219,7 +195,6 @@ input[type=range]::-moz-range-thumb {
 }
 @keyframes shimmer { 0%{background-position:200% center} 100%{background-position:-200% center} }
 
-/* ── Viewport ── */
 .viewport {
   width: 100%;
   height: clamp(300px, 58vh, 620px);
@@ -241,14 +216,12 @@ input[type=range]::-moz-range-thumb {
   image-rendering: crisp-edges;
 }
 
-/* Corner brackets */
 .vc { position: absolute; width: 20px; height: 20px; pointer-events: none; z-index: 5; opacity: .4; }
 .vc.tl { top:8px; left:8px;   border-top:2px solid var(--cyan); border-left:2px solid var(--cyan); }
 .vc.tr { top:8px; right:8px;  border-top:2px solid var(--cyan); border-right:2px solid var(--cyan); }
 .vc.bl { bottom:8px; left:8px;  border-bottom:2px solid var(--cyan); border-left:2px solid var(--cyan); }
 .vc.br { bottom:8px; right:8px; border-bottom:2px solid var(--cyan); border-right:2px solid var(--cyan); }
 
-/* Zoom cluster */
 .zoom-cl {
   position: absolute; bottom: 12px; left: 12px;
   display: flex; gap: 4px; z-index: 10;
@@ -268,8 +241,6 @@ input[type=range]::-moz-range-thumb {
   border-radius: var(--rsm); font-family: var(--fm); font-size: .7rem;
   color: var(--muted); display: flex; align-items: center; backdrop-filter: blur(4px);
 }
-
-/* Coords HUD */
 .coords-hud {
   position: absolute; bottom: 12px; right: 12px;
   font-family: var(--fm); font-size: .68rem; color: var(--muted);
@@ -278,10 +249,7 @@ input[type=range]::-moz-range-thumb {
   backdrop-filter: blur(4px); z-index: 10; pointer-events: none;
 }
 
-/* ── Stats ── */
-.stats-grid {
-  display: grid; grid-template-columns: repeat(4,1fr); gap: 8px;
-}
+.stats-grid { display: grid; grid-template-columns: repeat(4,1fr); gap: 8px; }
 @media(max-width:540px){ .stats-grid{grid-template-columns:repeat(2,1fr);} }
 
 .stat-card {
@@ -291,7 +259,6 @@ input[type=range]::-moz-range-thumb {
 .stat-lbl { font-size:.66rem; font-family:var(--fm); text-transform:uppercase; letter-spacing:.1em; color:var(--muted); }
 .stat-val { margin-top:3px; font-family:var(--fm); font-size:1.05rem; font-weight:600; color:var(--cyan); }
 
-/* ── Legend / Shortcuts ── */
 .bottom-row { display:flex; flex-wrap:wrap; gap:14px; justify-content:space-between; align-items:center; }
 .legend { display:flex; flex-wrap:wrap; gap:10px; }
 .leg-item { display:flex; align-items:center; gap:5px; font-size:.77rem; color:var(--label); }
@@ -305,7 +272,6 @@ input[type=range]::-moz-range-thumb {
   border-radius:3px; padding:1px 4px; color:var(--label);
 }
 
-/* ── Animations ── */
 @keyframes pulse-bd {
   0%,100%{ box-shadow: 0 0 5px rgba(6,214,240,.2); }
   50%    { box-shadow: 0 0 16px rgba(6,214,240,.5); }
@@ -318,8 +284,8 @@ input[type=range]::-moz-range-thumb {
 <header class="header">
   <h1>⬡ Maze Solver By Oslo</h1>
   <p class="tagline">
-    <b>A* Engine</b> · Smart Threshold · Otsu Auto-Detect ·
-    <b>Real-time Preview</b> · Zoom &amp; Pan
+    <b>A* 8-Direction</b> · Smart Threshold · Otsu Auto-Detect ·
+    <b>Real-time Preview</b> · Zoom &amp; Pan · Export PNG
   </p>
 </header>
 
@@ -330,30 +296,31 @@ input[type=range]::-moz-range-thumb {
     <div class="upload-zone" id="uploadZone">
       <input type="file" id="fileInput" accept="image/*">
       <div class="upload-icon">🗺️</div>
-      <p><strong>Click here to select a maze image</strong><br>
-         JPG, PNG, WebP, BMP — max resolution 1400 × 1400 px</p>
+      <p><strong>Klik di sini untuk memilih gambar labirin</strong><br>
+         JPG, PNG, WebP, BMP — resolusi maks 1400 × 1400 px</p>
     </div>
   </div>
 
   <!-- Toolbar -->
   <div class="panel" style="padding:11px 16px;">
     <div class="toolbar">
-      <button class="btn btn-ghost active" id="btnPlace" onclick="setMode('place')">📍 Place Point</button>
-      <button class="btn btn-ghost"        id="btnPan"   onclick="setMode('pan')">✋ Pan</button>
+      <button class="btn btn-ghost active" id="btnPlace" onclick="setMode('place')">📍 Pasang Titik</button>
+      <button class="btn btn-ghost"        id="btnPan"   onclick="setMode('pan')">✋ Geser</button>
       <div class="sep"></div>
-      <button class="btn btn-danger" id="btnReset"  onclick="resetAll()" disabled>↺ Reset</button>
-      <button class="btn btn-cyan"   id="btnFit"    onclick="zoomFit()"  disabled>⬜ Fit</button>
+      <button class="btn btn-danger" id="btnReset"  onclick="resetAll()"         disabled>↺ Reset</button>
+      <button class="btn btn-cyan"   id="btnFit"    onclick="zoomFit()"          disabled>⬜ Fit</button>
+      <button class="btn btn-violet" id="btnThresh" onclick="toggleThreshPanel()" disabled>⚙️ Deteksi Warna</button>
       <div class="sep"></div>
-      <button class="btn btn-violet" id="btnThresh" onclick="toggleThreshPanel()" disabled>⚙️ Color Detection</button>
+      <!-- Tombol Export — aktif setelah jalur ditemukan -->
+      <button class="btn btn-lime"   id="btnExport" onclick="exportSolution()"   disabled>⬇ Ekspor PNG</button>
     </div>
   </div>
 
-  <!-- Threshold / Detection Panel (hidden by default) -->
+  <!-- Threshold / Detection Panel -->
   <div class="thresh-panel" id="threshPanel">
-    <div class="thresh-label">⚙️ Wall Detection — Adjust before placing points</div>
-
+    <div class="thresh-label">⚙️ Deteksi Dinding — Atur sebelum memasang titik</div>
     <div class="thresh-row">
-      <button class="btn btn-cyan"   id="btnAutoOtsu" onclick="applyOtsu()">✨ Auto Otsu</button>
+      <button class="btn btn-cyan" id="btnAutoOtsu" onclick="applyOtsu()">✨ Auto Otsu</button>
       <div class="slider-wrap">
         <span style="font-family:var(--fm);font-size:.7rem;color:var(--muted);">0</span>
         <input type="range" id="threshSlider" min="0" max="255" value="128"
@@ -361,33 +328,26 @@ input[type=range]::-moz-range-thumb {
         <span style="font-family:var(--fm);font-size:.7rem;color:var(--muted);">255</span>
       </div>
       <span class="thresh-num" id="threshNum">128</span>
-
-      <button class="btn btn-ghost" id="btnInvert" onclick="toggleInvert()">↕ Normal</button>
-      <button class="btn btn-violet" id="btnPreview" onclick="togglePreview()">👁 Path Preview</button>
+      <button class="btn btn-ghost"  id="btnInvert"  onclick="toggleInvert()">↕ Normal</button>
+      <button class="btn btn-violet" id="btnPreview" onclick="togglePreview()">👁 Preview Jalur</button>
     </div>
-
-    <!-- Histogram -->
-    <div class="hist-wrap">
-      <canvas id="histCanvas"></canvas>
-    </div>
+    <div class="hist-wrap"><canvas id="histCanvas"></canvas></div>
     <div class="hist-legend">
-      <span>⬛ Wall (dark)</span>
+      <span>⬛ Dinding (gelap)</span>
       <span id="histOtsuLabel">— Otsu: —</span>
-      <span>⬜ Path (bright)</span>
+      <span>⬜ Jalur (terang)</span>
     </div>
-
-    <!-- Preview hint -->
     <div class="preview-hint" id="previewHint" style="display:none;">
-      <div class="dot-g"></div><span>Green = Path (walkable)</span>
-      <div class="dot-r" style="margin-left:10px;"></div><span>Dark Red = Wall</span>
-      <span style="margin-left:auto;color:var(--muted);">Adjust the slider until walls are clean</span>
+      <div class="dot-g"></div><span>Hijau = Jalur (walkable)</span>
+      <div class="dot-r" style="margin-left:10px;"></div><span>Merah gelap = Dinding</span>
+      <span style="margin-left:auto;color:var(--muted);">Sesuaikan slider sampai dinding bersih</span>
     </div>
   </div>
 
   <!-- Status -->
   <div class="status-bar" id="statusBar">
     <span class="status-icon" id="statusIcon">⏳</span>
-    <span class="status-text" id="statusText">Waiting for maze image…</span>
+    <span class="status-text" id="statusText">Menunggu gambar labirin…</span>
   </div>
 
   <!-- Progress -->
@@ -410,65 +370,66 @@ input[type=range]::-moz-range-thumb {
 
   <!-- Stats -->
   <div class="stats-grid" id="statsGrid" style="display:none;">
-    <div class="stat-card"><div class="stat-lbl">Nodes Scanned</div><div class="stat-val" id="sNodes">—</div></div>
-    <div class="stat-card"><div class="stat-lbl">Path Length</div><div class="stat-val" id="sPath">—</div></div>
-    <div class="stat-card"><div class="stat-lbl">Time Elapsed</div><div class="stat-val" id="sTime">—</div></div>
-    <div class="stat-card"><div class="stat-lbl">Resolution</div>   <div class="stat-val" id="sRes">—</div></div>
+    <div class="stat-card"><div class="stat-lbl">Node Dipindai</div><div class="stat-val" id="sNodes">—</div></div>
+    <div class="stat-card"><div class="stat-lbl">Panjang Jalur</div><div class="stat-val" id="sPath">—</div></div>
+    <div class="stat-card"><div class="stat-lbl">Waktu Selesai</div><div class="stat-val" id="sTime">—</div></div>
+    <div class="stat-card"><div class="stat-lbl">Resolusi</div>      <div class="stat-val" id="sRes">—</div></div>
   </div>
 
-  <!-- Legend + shortcuts -->
+  <!-- Legend + Shortcuts -->
   <div class="bottom-row">
     <div class="legend">
       <div class="leg-item"><div class="dot" style="background:#39d353"></div>Start</div>
       <div class="leg-item"><div class="dot" style="background:#4488ff"></div>End</div>
-      <div class="leg-item"><div class="dot" style="background:rgba(251,191,36,.75)"></div>Scanned Area</div>
-      <div class="leg-item"><div class="dot" style="background:#f04090"></div>A* Path</div>
+      <div class="leg-item"><div class="dot" style="background:rgba(251,191,36,.75)"></div>Area Dipindai</div>
+      <div class="leg-item"><div class="dot" style="background:#f04090"></div>Jalur A*</div>
     </div>
     <div class="shortcuts">
       <span><kbd>R</kbd> Reset</span>
       <span><kbd>F</kbd> Fit</span>
       <span><kbd>P</kbd> Pan</span>
       <span><kbd>T</kbd> Threshold</span>
+      <span><kbd>E</kbd> Export</span>
       <span><kbd>+</kbd><kbd>−</kbd> Zoom</span>
     </div>
   </div>
 
 </main>
 
-<!-- ═══════════════════════════════════════════════════════════════
-     JAVASCRIPT
-═══════════════════════════════════════════════════════════════ -->
 <script>
 'use strict';
 
 /* ═══════════════════════════════════════════════════════
-   MODULE 1 — WEB WORKER (A* Algorithm via Blob URL)
+   MODULE 1 — WEB WORKER (A* 8-Directional via Blob URL)
 
-   Improvements vs V4:
-   - Perceptual luminance: 0.299R + 0.587G + 0.114B
-     (instead of (R+G+B)/3 which is wrong for colored mazes)
-   - Alpha-aware: transparent pixels = walkable (empty space)
-   - Threshold + invert sent from main thread
-   - Safe for mazes of any color
+   UPGRADE dari 4-arah → 8-arah:
+   ┌─────────────────────────────────────────────────────┐
+   │  Biaya Gerakan (integer ×10 untuk presisi):         │
+   │  • Cardinal (↑↓←→)  : cost = 10                    │
+   │  • Diagonal (↖↗↙↘)  : cost = 14  (≈ 10√2)         │
+   │                                                     │
+   │  Heuristik: Octile Distance (×10)                   │
+   │  h = 10·max(dx,dy) + 4·min(dx,dy)                  │
+   │  → Admissible & consistent untuk 8-arah ✓          │
+   │                                                     │
+   │  Anti Corner-Cutting:                               │
+   │  Diagonal hanya diizinkan jika KEDUA tetangga       │
+   │  cardinal-nya juga walkable (mencegah tembus sudut) │
+   └─────────────────────────────────────────────────────┘
 ═══════════════════════════════════════════════════════ */
 const WORKER_SRC = `
 'use strict';
 
-/* ── Min-Heap (f-score) ── */
 class Heap {
   constructor() { this.h = []; }
   get size() { return this.h.length; }
-
   push(f, idx) { this.h.push({ f, idx }); this._up(this.h.length-1); }
-
   pop() {
     const top = this.h[0], last = this.h.pop();
     if (this.h.length) { this.h[0] = last; this._down(0); }
     return top;
   }
-
   _sw(a,b){ const t=this.h[a]; this.h[a]=this.h[b]; this.h[b]=t; }
-
   _up(i) {
     while (i>0) {
       const p=(i-1)>>1;
@@ -488,36 +449,30 @@ class Heap {
   }
 }
 
-/*
-  ── NEW walkable function (smart version) ──
-  Uses perceptual luminance ITU-R BT.601:
-    Y = 0.299*R + 0.587*G + 0.114*B
-  REQUIRED for colored mazes (green/blue/red):
-  - Old method (R+G+B)/3 can be wrong for saturated colors
-  - Example: pure green (#00ff00) → old=85, new=150 ✓
-  - Example: pure red (#ff0000)   → old=85, new=76  ✓
-
-  Alpha handling:
-  - Alpha < 10: transparent pixel → treat as walkable (empty space)
-  - Alpha >= 10: use normal luminance
-*/
+/* Luminance perseptual ITU-R BT.601 */
 function walkable(pix, i4, thr, inv) {
-  const a = pix[i4 + 3];
-  if (a < 10) return !inv;   /* transparent: usually empty path */
-
-  /* Perceptual luminance — NOT simple average */
-  const lum = 0.299 * pix[i4] + 0.587 * pix[i4+1] + 0.114 * pix[i4+2];
-
+  const a = pix[i4+3];
+  if (a < 10) return !inv;
+  const lum = 0.299*pix[i4] + 0.587*pix[i4+1] + 0.114*pix[i4+2];
   return inv ? lum < thr : lum >= thr;
 }
 
-/* ── A* Search (4-directional) ── */
+/* ── A* 8-Directional ── */
 function astar(pix, W, H, sx, sy, ex, ey, thr, inv) {
-  const N    = W * H;
-  const INF  = 0x7fffffff;
-  const DIRS = [[-1,0],[1,0],[0,-1],[0,1]];
-  const BSIZ = 4000;
+  const N   = W * H;
+  const INF = 0x7fffffff;
 
+  /*
+    8 arah dengan biaya integer (×10):
+    Cardinal = 10, Diagonal = 14 (floor(10√2))
+    [dx, dy, cost]
+  */
+  const DIRS = [
+    [-1, 0,10],[1, 0,10],[0,-1,10],[0, 1,10],
+    [-1,-1,14],[-1, 1,14],[1,-1,14],[1, 1,14]
+  ];
+
+  const BSIZ = 4000;
   const g      = new Int32Array(N).fill(INF);
   const parent = new Int32Array(N).fill(-1);
   const closed = new Uint8Array(N);
@@ -525,13 +480,18 @@ function astar(pix, W, H, sx, sy, ex, ey, thr, inv) {
   const si = sy*W+sx;
   const ei = ey*W+ex;
 
-  /* Ensure start/end are themselves walkable (sanity check) */
+  /* Octile Distance heuristic (×10) — admissible untuk 8-arah */
+  function h(x, y) {
+    const dx=Math.abs(x-ex), dy=Math.abs(y-ey);
+    return 10*Math.max(dx,dy) + 4*Math.min(dx,dy);
+  }
+
   g[si] = 0;
   const heap = new Heap();
-  heap.push(Math.abs(sx-ex)+Math.abs(sy-ey), si);
+  heap.push(h(sx,sy), si);
 
-  let buf = [], nVis = 0;
-  const t0 = Date.now();
+  let buf=[], nVis=0;
+  const t0=Date.now();
 
   while (heap.size > 0) {
     const { idx } = heap.pop();
@@ -541,69 +501,80 @@ function astar(pix, W, H, sx, sy, ex, ey, thr, inv) {
     buf.push(idx);
     nVis++;
 
-    /* ── FOUND ── */
     if (idx === ei) {
       if (buf.length) {
-        const a = new Int32Array(buf);
-        postMessage({ type:'progress', vis:a, total:nVis }, [a.buffer]);
+        const a=new Int32Array(buf);
+        postMessage({type:'progress',vis:a,total:nVis},[a.buffer]);
       }
-      const path = [];
-      let cur = ei;
-      while (cur !== -1) { path.push(cur); cur = parent[cur]; }
+      const path=[];
+      let cur=ei;
+      while (cur!==-1){path.push(cur);cur=parent[cur];}
       path.reverse();
-      const pa = new Int32Array(path);
-      postMessage({ type:'found', path:pa, totalVis:nVis, ms:Date.now()-t0 }, [pa.buffer]);
+      const pa=new Int32Array(path);
+      postMessage({type:'found',path:pa,totalVis:nVis,ms:Date.now()-t0},[pa.buffer]);
       return;
     }
 
-    /* ── Expand 4 directions ── */
-    const cx = idx % W, cy = (idx/W)|0;
-    for (const [dx,dy] of DIRS) {
+    const cx=idx%W, cy=(idx/W)|0;
+
+    for (const [dx,dy,cost] of DIRS) {
       const nx=cx+dx, ny=cy+dy;
       if (nx<0||nx>=W||ny<0||ny>=H) continue;
-      const ni = ny*W+nx;
+
+      /*
+        ── Anti Corner-Cutting ──
+        Untuk gerakan diagonal, KEDUA tetangga cardinal harus walkable.
+        Tanpa ini, solver bisa "menembus" sudut dinding secara illegal.
+        Contoh: jika bergerak ke kanan-atas (dx=1,dy=-1),
+          (cx+1, cy) dan (cx, cy-1) keduanya harus walkable.
+      */
+      if (dx!==0 && dy!==0) {
+        if (!walkable(pix,(cy*W+(cx+dx))*4,thr,inv)) continue;
+        if (!walkable(pix,((cy+dy)*W+cx)*4,thr,inv)) continue;
+      }
+
+      const ni=ny*W+nx;
       if (closed[ni]) continue;
-      if (!walkable(pix, ni*4, thr, inv)) continue;
-      const tg = g[idx]+1;
-      if (tg < g[ni]) {
+      if (!walkable(pix,ni*4,thr,inv)) continue;
+
+      const tg=g[idx]+cost;
+      if (tg<g[ni]) {
         g[ni]=tg; parent[ni]=idx;
-        heap.push(tg + Math.abs(nx-ex)+Math.abs(ny-ey), ni);
+        heap.push(tg+h(nx,ny),ni);
       }
     }
 
-    /* Flush batch */
-    if (buf.length >= BSIZ) {
-      const a = new Int32Array(buf);
-      postMessage({ type:'progress', vis:a, total:nVis }, [a.buffer]);
+    if (buf.length>=BSIZ) {
+      const a=new Int32Array(buf);
+      postMessage({type:'progress',vis:a,total:nVis},[a.buffer]);
       buf=[];
     }
   }
 
-  if (buf.length) {
-    const a = new Int32Array(buf);
-    postMessage({ type:'progress', vis:a, total:nVis }, [a.buffer]);
+  if (buf.length){
+    const a=new Int32Array(buf);
+    postMessage({type:'progress',vis:a,total:nVis},[a.buffer]);
   }
-  postMessage({ type:'notfound', totalVis:nVis, ms:Date.now()-t0 });
+  postMessage({type:'notfound',totalVis:nVis,ms:Date.now()-t0});
 }
 
-self.onmessage = function({ data:d }) {
-  if (d.type==='solve')
-    astar(d.pix, d.W, d.H, d.sx, d.sy, d.ex, d.ey, d.thr, d.inv);
+self.onmessage=function({data:d}){
+  if(d.type==='solve') astar(d.pix,d.W,d.H,d.sx,d.sy,d.ex,d.ey,d.thr,d.inv);
 };
 `;
 
-const _wb  = new Blob([WORKER_SRC], { type:'application/javascript' });
+const _wb  = new Blob([WORKER_SRC],{type:'application/javascript'});
 const _wURL = URL.createObjectURL(_wb);
 
 /* ═══════════════════════════════════════
    MODULE 2 — STATE
 ═══════════════════════════════════════ */
 const canvas   = document.getElementById('mazeCanvas');
-const ctx      = canvas.getContext('2d', { willReadFrequently: true });
+const ctx      = canvas.getContext('2d',{willReadFrequently:true});
 const viewport = document.getElementById('viewport');
 
-let cleanPx   = null;   /* Original ImageData */
-let overlayPx = null;   /* Uint8ClampedArray for scan-vis */
+let cleanPx   = null;
+let overlayPx = null;
 let startPt   = null;
 let endPt     = null;
 let isSolving = false;
@@ -611,18 +582,20 @@ let mode      = 'place';
 let worker    = null;
 let solveT0   = 0;
 
-/* ── Threshold state (NEW in V5) ── */
-let threshold   = 128;  /* overridden by Otsu on load */
-let invert      = false;
-let previewOn   = false;
-let otsuValue   = 128;  /* Otsu recommended value */
-let histData    = null; /* Uint32Array[256] histogram */
+/* Threshold state */
+let threshold      = 128;
+let invert         = false;
+let previewOn      = false;
+let otsuValue      = 128;
+let histData       = null;
 let threshPanelOpen = false;
 
-/* Transform */
-const tf = { x:0, y:0, s:1 };
-let rafQueued = false, visBatches = [], totalNodes = 0;
-const drag = { on:false, x0:0, y0:0, tx:0, ty:0 };
+/* ── lastPath: simpan jalur terakhir untuk fitur Ekspor ── */
+let lastPath = null;
+
+const tf = {x:0,y:0,s:1};
+let rafQueued=false, visBatches=[], totalNodes=0;
+const drag={on:false,x0:0,y0:0,tx:0,ty:0};
 
 /* ═══════════════════════════════════════
    MODULE 3 — IMAGE LOADER
@@ -630,525 +603,412 @@ const drag = { on:false, x0:0, y0:0, tx:0, ty:0 };
 const fileInput  = document.getElementById('fileInput');
 const uploadZone = document.getElementById('uploadZone');
 
-uploadZone.addEventListener('dragover', e => { e.preventDefault(); uploadZone.classList.add('drag-over'); });
-uploadZone.addEventListener('dragleave', () => uploadZone.classList.remove('drag-over'));
-uploadZone.addEventListener('drop', e => {
-  e.preventDefault(); uploadZone.classList.remove('drag-over');
-  const f = e.dataTransfer.files[0];
-  if (f && f.type.startsWith('image/')) loadImg(f);
+uploadZone.addEventListener('dragover',e=>{e.preventDefault();uploadZone.classList.add('drag-over');});
+uploadZone.addEventListener('dragleave',()=>uploadZone.classList.remove('drag-over'));
+uploadZone.addEventListener('drop',e=>{
+  e.preventDefault();uploadZone.classList.remove('drag-over');
+  const f=e.dataTransfer.files[0];
+  if(f&&f.type.startsWith('image/')) loadImg(f);
 });
-fileInput.addEventListener('change', e => { if (e.target.files[0]) loadImg(e.target.files[0]); });
+fileInput.addEventListener('change',e=>{if(e.target.files[0])loadImg(e.target.files[0]);});
 
 function loadImg(file) {
   killWorker();
-  const rd = new FileReader();
-  rd.onload = ev => {
-    const img = new Image();
-    img.onload = () => {
-      const MAX = 1400;
-      let W = img.width, H = img.height;
-      if (W > MAX || H > MAX) {
-        const r = Math.min(MAX/W, MAX/H);
-        W = Math.round(W*r); H = Math.round(H*r);
-      }
-      canvas.width = W; canvas.height = H;
-      ctx.drawImage(img, 0, 0, W, H);
-      cleanPx   = ctx.getImageData(0, 0, W, H);
+  const rd=new FileReader();
+  rd.onload=ev=>{
+    const img=new Image();
+    img.onload=()=>{
+      const MAX=1400;
+      let W=img.width,H=img.height;
+      if(W>MAX||H>MAX){const r=Math.min(MAX/W,MAX/H);W=Math.round(W*r);H=Math.round(H*r);}
+      canvas.width=W; canvas.height=H;
+      ctx.drawImage(img,0,0,W,H);
+      cleanPx   = ctx.getImageData(0,0,W,H);
       overlayPx = new Uint8ClampedArray(cleanPx.data);
 
-      /* ── Image analysis: compute histogram + Otsu ── */
       histData  = computeHistogram(cleanPx);
-      otsuValue = computeOtsu(histData, W*H);
+      otsuValue = computeOtsu(histData,W*H);
       threshold = otsuValue;
       invert    = false;
       previewOn = false;
+      lastPath  = null;
 
-      /* Update threshold UI */
-      document.getElementById('threshSlider').value = threshold;
-      document.getElementById('threshNum').textContent = threshold;
-      document.getElementById('histOtsuLabel').textContent = `✨ Otsu: ${otsuValue}`;
-      document.getElementById('btnInvert').textContent = '↕ Normal';
+      document.getElementById('threshSlider').value=threshold;
+      document.getElementById('threshNum').textContent=threshold;
+      document.getElementById('histOtsuLabel').textContent=`✨ Otsu: ${otsuValue}`;
+      document.getElementById('btnInvert').textContent='↕ Normal';
+      initHistCanvas(); drawHistogram();
 
-      /* Draw histogram */
-      initHistCanvas();
-      drawHistogram();
-
-      setStat('sRes', `${W}×${H}`);
-      document.getElementById('statsGrid').style.display = 'grid';
+      setStat('sRes',`${W}×${H}`);
+      document.getElementById('statsGrid').style.display='grid';
       document.getElementById('btnReset').disabled  = false;
       document.getElementById('btnFit').disabled    = false;
       document.getElementById('btnThresh').disabled = false;
+      document.getElementById('btnExport').disabled = true;
 
-      zoomFit();
-      resetPoints();
-      setStatus('ℹ️', `Image ready (<strong>${W}×${H}</strong>) — Otsu threshold: <strong>${otsuValue}</strong>. Click the <strong>START</strong> point.`, 'cyan');
+      zoomFit(); resetPoints();
+      setStatus('ℹ️',`Gambar siap (<strong>${W}×${H}</strong>) — Otsu: <strong>${otsuValue}</strong>. Klik titik <strong>START</strong>.`,'cyan');
     };
-    img.src = ev.target.result;
+    img.src=ev.target.result;
   };
   rd.readAsDataURL(file);
 }
 
 /* ═══════════════════════════════════════
    MODULE 4 — OTSU + HISTOGRAM
-   Classic algorithm to automatically find
-   the optimal threshold from the image's
-   luminance distribution.
 ═══════════════════════════════════════ */
-
-/*
-  Compute perceptual luminance for each pixel
-  and insert into histogram [0..255].
-*/
 function computeHistogram(imgData) {
-  const hist = new Uint32Array(256);
-  const d = imgData.data;
-  const n = d.length >> 2; /* total pixels */
-  for (let i = 0; i < n; i++) {
-    const i4 = i * 4;
-    const a  = d[i4+3];
-    if (a < 10) continue; /* skip transparent pixels */
-    /* Perceptual luminance BT.601 */
-    const lum = Math.round(0.299*d[i4] + 0.587*d[i4+1] + 0.114*d[i4+2]);
+  const hist=new Uint32Array(256);
+  const d=imgData.data, n=d.length>>2;
+  for(let i=0;i<n;i++){
+    const i4=i*4;
+    if(d[i4+3]<10) continue;
+    const lum=Math.round(0.299*d[i4]+0.587*d[i4+1]+0.114*d[i4+2]);
     hist[lum]++;
   }
   return hist;
 }
 
-/*
-  Otsu's Method:
-  Find threshold T that maximizes
-  between-class variance between
-  "dark (wall)" and "bright (path)" classes.
-
-  Complexity: O(256) — very fast.
-*/
-function computeOtsu(hist, total) {
-  let sum = 0;
-  for (let i = 0; i < 256; i++) sum += i * hist[i];
-
-  let sumB = 0, wB = 0, maxV = 0, best = 128;
-
-  for (let t = 0; t < 256; t++) {
-    wB += hist[t];
-    if (!wB) continue;
-    const wF = total - wB;
-    if (!wF) break;
-
-    sumB += t * hist[t];
-    const mB = sumB / wB;
-    const mF = (sum - sumB) / wF;
-    const v  = wB * wF * (mB - mF) * (mB - mF);
-
-    if (v > maxV) { maxV = v; best = t; }
+function computeOtsu(hist,total) {
+  let sum=0;
+  for(let i=0;i<256;i++) sum+=i*hist[i];
+  let sumB=0,wB=0,maxV=0,best=128;
+  for(let t=0;t<256;t++){
+    wB+=hist[t]; if(!wB) continue;
+    const wF=total-wB; if(!wF) break;
+    sumB+=t*hist[t];
+    const mB=sumB/wB, mF=(sum-sumB)/wF;
+    const v=wB*wF*(mB-mF)*(mB-mF);
+    if(v>maxV){maxV=v;best=t;}
   }
   return best;
 }
 
-function initHistCanvas() {
-  const hc = document.getElementById('histCanvas');
-  /* Match CSS display width for sharp rendering */
-  const w  = hc.parentElement.clientWidth || 600;
-  hc.width  = w;
-  hc.height = 52;
+function initHistCanvas(){
+  const hc=document.getElementById('histCanvas');
+  hc.width=hc.parentElement.clientWidth||600; hc.height=52;
 }
 
-function drawHistogram() {
-  const hc  = document.getElementById('histCanvas');
-  const hx  = hc.getContext('2d');
-  const W   = hc.width, H = hc.height;
-  if (!histData) return;
-
-  hx.clearRect(0, 0, W, H);
-
-  /* Find max (skip 0 and 255 to avoid solid black/white spikes) */
-  let maxV = 0;
-  for (let i = 2; i < 254; i++) maxV = Math.max(maxV, histData[i]);
-  if (!maxV) maxV = 1;
-
-  const barW = W / 256;
-
-  /* Draw histogram bars with color gradient based on threshold */
-  for (let i = 0; i < 256; i++) {
-    const h = Math.round((histData[i] / maxV) * (H - 4));
-    if (!h) continue;
-
-    /* Color: blue=wall (< threshold), pink=path (>= threshold) */
-    hx.fillStyle = i < threshold
-      ? `rgba(68,136,255,${invert ? 0.4 : 0.75})`
-      : `rgba(240,64,144,${invert ? 0.75 : 0.4})`;
-
-    hx.fillRect(i * barW, H - h, barW + 0.5, h);
+function drawHistogram(){
+  const hc=document.getElementById('histCanvas');
+  const hx=hc.getContext('2d');
+  const W=hc.width,H=hc.height;
+  if(!histData) return;
+  hx.clearRect(0,0,W,H);
+  let maxV=0;
+  for(let i=2;i<254;i++) maxV=Math.max(maxV,histData[i]);
+  if(!maxV) maxV=1;
+  const barW=W/256;
+  for(let i=0;i<256;i++){
+    const h=Math.round((histData[i]/maxV)*(H-4));
+    if(!h) continue;
+    hx.fillStyle=i<threshold
+      ?`rgba(68,136,255,${invert?.4:.75})`
+      :`rgba(240,64,144,${invert?.75:.4})`;
+    hx.fillRect(i*barW,H-h,barW+.5,h);
   }
-
-  /* Threshold line — vivid cyan */
-  const tx = threshold * barW;
-  hx.fillStyle = 'rgba(6,214,240,0.9)';
-  hx.fillRect(tx - 1, 0, 2, H);
-
-  /* Otsu line (if different from threshold) */
-  if (Math.abs(otsuValue - threshold) > 2) {
-    const ox = otsuValue * barW;
-    hx.fillStyle = 'rgba(167,139,250,0.6)';
-    hx.fillRect(ox - 1, 0, 2, H);
-
-    /* Otsu label */
-    hx.fillStyle = 'rgba(167,139,250,0.8)';
-    hx.font = '9px JetBrains Mono, monospace';
-    hx.fillText('✨', ox > W-20 ? ox-20 : ox+3, 10);
+  const tx=threshold*barW;
+  hx.fillStyle='rgba(6,214,240,0.9)';
+  hx.fillRect(tx-1,0,2,H);
+  if(Math.abs(otsuValue-threshold)>2){
+    const ox=otsuValue*barW;
+    hx.fillStyle='rgba(167,139,250,0.6)';
+    hx.fillRect(ox-1,0,2,H);
+    hx.fillStyle='rgba(167,139,250,0.8)';
+    hx.font='9px JetBrains Mono,monospace';
+    hx.fillText('✨',ox>W-20?ox-20:ox+3,10);
   }
-
-  /* Current threshold value label */
-  hx.fillStyle = 'rgba(6,214,240,0.95)';
-  hx.font = '10px JetBrains Mono, monospace';
-  const labelX = tx > W - 30 ? tx - 34 : tx + 4;
-  hx.fillText(threshold, labelX, 14);
+  hx.fillStyle='rgba(6,214,240,0.95)';
+  hx.font='10px JetBrains Mono,monospace';
+  const labelX=tx>W-30?tx-34:tx+4;
+  hx.fillText(threshold,labelX,14);
 }
 
 /* ═══════════════════════════════════════
    MODULE 5 — THRESHOLD PANEL CONTROLS
 ═══════════════════════════════════════ */
-function toggleThreshPanel() {
-  threshPanelOpen = !threshPanelOpen;
-  const panel = document.getElementById('threshPanel');
-  panel.style.display = threshPanelOpen ? 'block' : 'none';
-  document.getElementById('btnThresh').classList.toggle('active', threshPanelOpen);
-
-  if (threshPanelOpen) {
-    /* Re-init histogram canvas width when panel appears */
-    setTimeout(() => { initHistCanvas(); drawHistogram(); }, 50);
-  }
+function toggleThreshPanel(){
+  threshPanelOpen=!threshPanelOpen;
+  document.getElementById('threshPanel').style.display=threshPanelOpen?'block':'none';
+  document.getElementById('btnThresh').classList.toggle('active',threshPanelOpen);
+  if(threshPanelOpen) setTimeout(()=>{initHistCanvas();drawHistogram();},50);
 }
 
-function onSliderChange(val) {
-  threshold = parseInt(val);
-  document.getElementById('threshNum').textContent = threshold;
+function onSliderChange(val){
+  threshold=parseInt(val);
+  document.getElementById('threshNum').textContent=threshold;
   drawHistogram();
-
-  /* If preview is active, update immediately */
-  if (previewOn) renderPreview();
+  if(previewOn) renderPreview();
 }
 
-function applyOtsu() {
-  threshold = otsuValue;
-  document.getElementById('threshSlider').value = threshold;
-  document.getElementById('threshNum').textContent = threshold;
+function applyOtsu(){
+  threshold=otsuValue;
+  document.getElementById('threshSlider').value=threshold;
+  document.getElementById('threshNum').textContent=threshold;
   drawHistogram();
-  if (previewOn) renderPreview();
-  setStatus('✨', `Otsu threshold applied: <strong>${threshold}</strong> — adjust if needed.`, 'cyan');
+  if(previewOn) renderPreview();
+  setStatus('✨',`Otsu threshold diterapkan: <strong>${threshold}</strong> — sesuaikan jika perlu.`,'cyan');
 }
 
-function toggleInvert() {
-  invert = !invert;
-  const btn = document.getElementById('btnInvert');
-  btn.textContent = invert ? '↕ Invert ✓' : '↕ Normal';
-  btn.classList.toggle('active', invert);
+function toggleInvert(){
+  invert=!invert;
+  const btn=document.getElementById('btnInvert');
+  btn.textContent=invert?'↕ Invert ✓':'↕ Normal';
+  btn.classList.toggle('active',invert);
   drawHistogram();
-  if (previewOn) renderPreview();
-
-  /* Reset points if already placed (threshold changed) */
-  if (startPt || endPt) {
-    resetPoints();
-    setStatus('ℹ️', 'Invert mode changed — place START point again.', 'cyan');
-  }
+  if(previewOn) renderPreview();
+  if(startPt||endPt){resetPoints();setStatus('ℹ️','Mode invert berubah — pasang titik START ulang.','cyan');}
 }
 
-function togglePreview() {
-  if (isSolving) return;
-  previewOn = !previewOn;
-  const btn = document.getElementById('btnPreview');
-  btn.classList.toggle('active', previewOn);
-  document.getElementById('previewHint').style.display = previewOn ? 'flex' : 'none';
-
-  if (previewOn) {
+function togglePreview(){
+  if(isSolving) return;
+  previewOn=!previewOn;
+  document.getElementById('btnPreview').classList.toggle('active',previewOn);
+  document.getElementById('previewHint').style.display=previewOn?'flex':'none';
+  if(previewOn){
     renderPreview();
-    setStatus('👁', 'Preview active — <strong>green</strong> = path, <strong>dark red</strong> = wall. Adjust slider for precision.', 'violet');
+    setStatus('👁','Preview aktif — <strong>hijau</strong> = jalur, <strong>merah gelap</strong> = dinding.','violet');
   } else {
-    /* Restore original image */
-    if (cleanPx) {
-      ctx.putImageData(cleanPx, 0, 0);
-      redrawMarkers();
-    }
-    setStatus('ℹ️', 'Preview disabled.', 'cyan');
+    if(cleanPx){ctx.putImageData(cleanPx,0,0);redrawMarkers();}
+    setStatus('ℹ️','Preview dimatikan.','cyan');
   }
 }
 
-/*
-  renderPreview():
-  Visualize the walkable/wall decision for each pixel.
-  - Bright green = pixel considered WALKABLE (path)
-  - Dark red     = pixel considered WALL
-
-  Helps the user see if the threshold is correct
-  before running the solver.
-*/
-function renderPreview() {
-  if (!cleanPx) return;
-  const W = canvas.width, H = canvas.height;
-  const d = cleanPx.data;
-  const n = W * H;
-  const out = new Uint8ClampedArray(n * 4);
-
-  for (let i = 0; i < n; i++) {
-    const i4 = i * 4;
-    const a  = d[i4+3];
-
+function renderPreview(){
+  if(!cleanPx) return;
+  const W=canvas.width,H=canvas.height,d=cleanPx.data,n=W*H;
+  const out=new Uint8ClampedArray(n*4);
+  for(let i=0;i<n;i++){
+    const i4=i*4,a=d[i4+3];
     let isPath;
-    if (a < 10) {
-      /* Transparent pixel → walkable */
-      isPath = !invert;
+    if(a<10){isPath=!invert;}
+    else{const lum=0.299*d[i4]+0.587*d[i4+1]+0.114*d[i4+2];isPath=invert?lum<threshold:lum>=threshold;}
+    if(isPath){
+      out[i4]  =Math.min(255,Math.round(d[i4]*.3+80));
+      out[i4+1]=Math.min(255,Math.round(d[i4+1]*.3+200));
+      out[i4+2]=Math.min(255,Math.round(d[i4+2]*.3+60));
+      out[i4+3]=255;
     } else {
-      const lum = 0.299*d[i4] + 0.587*d[i4+1] + 0.114*d[i4+2];
-      isPath = invert ? lum < threshold : lum >= threshold;
-    }
-
-    if (isPath) {
-      /* Path: bright green tint */
-      out[i4]   = Math.min(255, Math.round(d[i4] * 0.3 + 80));
-      out[i4+1] = Math.min(255, Math.round(d[i4+1] * 0.3 + 200));
-      out[i4+2] = Math.min(255, Math.round(d[i4+2] * 0.3 + 60));
-      out[i4+3] = 255;
-    } else {
-      /* Wall: dark brownish-red */
-      const lum = 0.299*d[i4] + 0.587*d[i4+1] + 0.114*d[i4+2];
-      out[i4]   = Math.round(lum * 0.25 + 30);
-      out[i4+1] = Math.round(lum * 0.1);
-      out[i4+2] = Math.round(lum * 0.1);
-      out[i4+3] = 255;
+      const lum=0.299*d[i4]+0.587*d[i4+1]+0.114*d[i4+2];
+      out[i4]  =Math.round(lum*.25+30);
+      out[i4+1]=Math.round(lum*.1);
+      out[i4+2]=Math.round(lum*.1);
+      out[i4+3]=255;
     }
   }
-
-  ctx.putImageData(new ImageData(out, W, H), 0, 0);
+  ctx.putImageData(new ImageData(out,W,H),0,0);
   redrawMarkers();
 }
 
-/* ── helper isWalkable (main thread, same logic as worker) ── */
-function isWalkable(x, y) {
-  if (!cleanPx) return false;
-  const i4 = (y * canvas.width + x) * 4;
-  const a  = cleanPx.data[i4+3];
-  if (a < 10) return !invert;
-  const lum = 0.299*cleanPx.data[i4] + 0.587*cleanPx.data[i4+1] + 0.114*cleanPx.data[i4+2];
-  return invert ? lum < threshold : lum >= threshold;
+function isWalkable(x,y){
+  if(!cleanPx) return false;
+  const i4=(y*canvas.width+x)*4,a=cleanPx.data[i4+3];
+  if(a<10) return !invert;
+  const lum=0.299*cleanPx.data[i4]+0.587*cleanPx.data[i4+1]+0.114*cleanPx.data[i4+2];
+  return invert?lum<threshold:lum>=threshold;
 }
 
 /* ═══════════════════════════════════════
    MODULE 6 — ZOOM & PAN
 ═══════════════════════════════════════ */
-function applyTF() {
-  canvas.style.transform = `translate(${tf.x}px,${tf.y}px) scale(${tf.s})`;
-  document.getElementById('zoomPct').textContent = Math.round(tf.s*100)+'%';
+function applyTF(){
+  canvas.style.transform=`translate(${tf.x}px,${tf.y}px) scale(${tf.s})`;
+  document.getElementById('zoomPct').textContent=Math.round(tf.s*100)+'%';
 }
-
-function clampTF() {
-  const vw=viewport.clientWidth, vh=viewport.clientHeight;
-  const cw=canvas.width*tf.s,    ch=canvas.height*tf.s;
-  const px=Math.min(cw*.5,vw*.5), py=Math.min(ch*.5,vh*.5);
+function clampTF(){
+  const vw=viewport.clientWidth,vh=viewport.clientHeight;
+  const cw=canvas.width*tf.s,ch=canvas.height*tf.s;
+  const px=Math.min(cw*.5,vw*.5),py=Math.min(ch*.5,vh*.5);
   tf.x=Math.min(px,Math.max(vw-cw-px,tf.x));
   tf.y=Math.min(py,Math.max(vh-ch-py,tf.y));
 }
-
-function zoomFit() {
-  if (!canvas.width) return;
-  const vw=viewport.clientWidth, vh=viewport.clientHeight;
-  tf.s=Math.min(vw/canvas.width, vh/canvas.height, 1);
+function zoomFit(){
+  if(!canvas.width) return;
+  const vw=viewport.clientWidth,vh=viewport.clientHeight;
+  tf.s=Math.min(vw/canvas.width,vh/canvas.height,1);
   tf.x=(vw-canvas.width*tf.s)/2;
   tf.y=(vh-canvas.height*tf.s)/2;
   applyTF();
 }
-
-function doZoom(delta, ox, oy) {
-  ox = ox ?? viewport.clientWidth/2;
-  oy = oy ?? viewport.clientHeight/2;
+function doZoom(delta,ox,oy){
+  ox=ox??viewport.clientWidth/2; oy=oy??viewport.clientHeight/2;
   const old=tf.s;
-  tf.s=Math.max(0.1, Math.min(12, tf.s+delta));
-  tf.x=ox-(ox-tf.x)*(tf.s/old);
-  tf.y=oy-(oy-tf.y)*(tf.s/old);
+  tf.s=Math.max(.1,Math.min(12,tf.s+delta));
+  tf.x=ox-(ox-tf.x)*(tf.s/old); tf.y=oy-(oy-tf.y)*(tf.s/old);
   clampTF(); applyTF();
 }
 
-viewport.addEventListener('wheel', e => {
+viewport.addEventListener('wheel',e=>{
   e.preventDefault();
   const r=viewport.getBoundingClientRect();
-  doZoom(e.deltaY<0?0.12:-0.12, e.clientX-r.left, e.clientY-r.top);
-}, { passive:false });
+  doZoom(e.deltaY<0?.12:-.12,e.clientX-r.left,e.clientY-r.top);
+},{passive:false});
 
-viewport.addEventListener('mousedown', e => {
-  if (mode!=='pan') return;
+viewport.addEventListener('mousedown',e=>{
+  if(mode!=='pan') return;
   e.preventDefault();
   Object.assign(drag,{on:true,x0:e.clientX,y0:e.clientY,tx:tf.x,ty:tf.y});
   viewport.classList.add('panning');
 });
-window.addEventListener('mousemove', e => {
-  if (!drag.on) return;
-  tf.x=drag.tx+e.clientX-drag.x0;
-  tf.y=drag.ty+e.clientY-drag.y0;
+window.addEventListener('mousemove',e=>{
+  if(!drag.on) return;
+  tf.x=drag.tx+e.clientX-drag.x0; tf.y=drag.ty+e.clientY-drag.y0;
   clampTF(); applyTF();
 });
-window.addEventListener('mouseup', () => { drag.on=false; viewport.classList.remove('panning'); });
+window.addEventListener('mouseup',()=>{drag.on=false;viewport.classList.remove('panning');});
 
-viewport.addEventListener('mousemove', e => {
-  if (!cleanPx) return;
+viewport.addEventListener('mousemove',e=>{
+  if(!cleanPx) return;
   const p=vp2c(e.clientX,e.clientY);
-  if (p.x>=0&&p.x<canvas.width&&p.y>=0&&p.y<canvas.height) {
-    const w = isWalkable(p.x,p.y);
-    document.getElementById('coordsHud').textContent=`x:${p.x} y:${p.y} ${w?'🟢':'🔴'}`;
-  }
+  if(p.x>=0&&p.x<canvas.width&&p.y>=0&&p.y<canvas.height)
+    document.getElementById('coordsHud').textContent=`x:${p.x} y:${p.y} ${isWalkable(p.x,p.y)?'🟢':'🔴'}`;
 });
 
-/* Touch pinch + pan */
 let pinch0=null;
-viewport.addEventListener('touchstart', e => {
-  if (e.touches.length===2) {
+viewport.addEventListener('touchstart',e=>{
+  if(e.touches.length===2){
     const r=viewport.getBoundingClientRect();
-    pinch0={
-      dist:Math.hypot(e.touches[0].clientX-e.touches[1].clientX,
-                      e.touches[0].clientY-e.touches[1].clientY),
-      cx:(e.touches[0].clientX+e.touches[1].clientX)/2-r.left,
-      cy:(e.touches[0].clientY+e.touches[1].clientY)/2-r.top,
-      s0:tf.s
-    };
-  } else if (mode==='pan') {
+    pinch0={dist:Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY),
+            cx:(e.touches[0].clientX+e.touches[1].clientX)/2-r.left,
+            cy:(e.touches[0].clientY+e.touches[1].clientY)/2-r.top,s0:tf.s};
+  } else if(mode==='pan'){
     Object.assign(drag,{on:true,x0:e.touches[0].clientX,y0:e.touches[0].clientY,tx:tf.x,ty:tf.y});
   }
 },{passive:true});
-viewport.addEventListener('touchmove', e => {
-  if (e.touches.length===2&&pinch0) {
+viewport.addEventListener('touchmove',e=>{
+  if(e.touches.length===2&&pinch0){
     e.preventDefault();
-    const dist=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,
-                          e.touches[0].clientY-e.touches[1].clientY);
+    const dist=Math.hypot(e.touches[0].clientX-e.touches[1].clientX,e.touches[0].clientY-e.touches[1].clientY);
     const old=tf.s;
-    tf.s=Math.max(0.1,Math.min(12,pinch0.s0*(dist/pinch0.dist)));
+    tf.s=Math.max(.1,Math.min(12,pinch0.s0*(dist/pinch0.dist)));
     tf.x=pinch0.cx-(pinch0.cx-tf.x)*(tf.s/old);
     tf.y=pinch0.cy-(pinch0.cy-tf.y)*(tf.s/old);
     clampTF(); applyTF();
-  } else if (drag.on) {
+  } else if(drag.on){
     e.preventDefault();
     tf.x=drag.tx+e.touches[0].clientX-drag.x0;
     tf.y=drag.ty+e.touches[0].clientY-drag.y0;
     clampTF(); applyTF();
   }
 },{passive:false});
-viewport.addEventListener('touchend', ()=>{ drag.on=false; pinch0=null; });
+viewport.addEventListener('touchend',()=>{drag.on=false;pinch0=null;});
 
-function vp2c(cx,cy) {
+function vp2c(cx,cy){
   const r=viewport.getBoundingClientRect();
-  return {
-    x:Math.round((cx-r.left-tf.x)/tf.s),
-    y:Math.round((cy-r.top-tf.y)/tf.s)
-  };
+  return{x:Math.round((cx-r.left-tf.x)/tf.s),y:Math.round((cy-r.top-tf.y)/tf.s)};
 }
 
 /* ═══════════════════════════════════════
    MODULE 7 — MODE / CLICK / SOLVE / ANIMATE
 ═══════════════════════════════════════ */
-function setMode(m) {
+function setMode(m){
   mode=m;
   document.getElementById('btnPlace').classList.toggle('active',m==='place');
   document.getElementById('btnPan').classList.toggle('active',m==='pan');
   viewport.classList.toggle('pan-mode',m==='pan');
 }
 
-viewport.addEventListener('click', e => {
-  if (!cleanPx||isSolving||mode!=='place'||drag.on) return;
+viewport.addEventListener('click',e=>{
+  if(!cleanPx||isSolving||mode!=='place'||drag.on) return;
   const raw=vp2c(e.clientX,e.clientY);
-  if (raw.x<0||raw.x>=canvas.width||raw.y<0||raw.y>=canvas.height) return;
+  if(raw.x<0||raw.x>=canvas.width||raw.y<0||raw.y>=canvas.height) return;
 
-  /* Turn off preview when clicking a point */
-  if (previewOn) {
+  if(previewOn){
     previewOn=false;
     document.getElementById('btnPreview').classList.remove('active');
     document.getElementById('previewHint').style.display='none';
     ctx.putImageData(cleanPx,0,0);
   }
 
-  const safe = snapToPath(raw.x, raw.y);
+  const safe=snapToPath(raw.x,raw.y);
 
-  if (!startPt) {
+  if(!startPt){
     startPt=safe;
     drawMarker(safe.x,safe.y,'#39d353');
-    setStatus('📍','<strong>START</strong> point placed. Click the <strong>END</strong> point.','lime');
-  } else if (!endPt) {
+    setStatus('📍','Titik <strong>START</strong> terpasang. Klik titik <strong>END</strong>.','lime');
+  } else if(!endPt){
     endPt=safe;
     drawMarker(safe.x,safe.y,'#4488ff');
-    setStatus('⚙️','Running A* Search…','amber');
+    setStatus('⚙️','Menjalankan A* 8-Arah…','amber');
     beginSolve();
   }
 });
 
-/* Auto-snap using new isWalkable (threshold + invert aware) */
-function snapToPath(x,y) {
-  if (isWalkable(x,y)) return {x,y};
-  for (let r=1;r<=25;r++) {
-    for (let dy=-r;dy<=r;dy++) {
-      for (let dx=-r;dx<=r;dx++) {
+function snapToPath(x,y){
+  if(isWalkable(x,y)) return{x,y};
+  for(let r=1;r<=25;r++){
+    for(let dy=-r;dy<=r;dy++){
+      for(let dx=-r;dx<=r;dx++){
         const nx=x+dx,ny=y+dy;
-        if (nx>=0&&nx<canvas.width&&ny>=0&&ny<canvas.height&&isWalkable(nx,ny))
-          return {x:nx,y:ny};
+        if(nx>=0&&nx<canvas.width&&ny>=0&&ny<canvas.height&&isWalkable(nx,ny))
+          return{x:nx,y:ny};
       }
     }
   }
-  return {x,y};
+  return{x,y};
 }
 
-/* ── Begin Solve ── */
-function beginSolve() {
+function beginSolve(){
   isSolving=true; solveT0=performance.now();
   totalNodes=0; visBatches=[]; rafQueued=false;
   overlayPx=new Uint8ClampedArray(cleanPx.data);
   showProgress(true); setProgress(0);
   document.getElementById('shell').classList.add('solving');
+  document.getElementById('btnExport').disabled=true;
   killWorker();
   worker=new Worker(_wURL);
   worker.onmessage=onMsg;
-  worker.onerror=err=>{
-    setStatus('❌',`Worker error: ${err.message}`,'red');
-    endSolve();
-  };
+  worker.onerror=err=>{setStatus('❌',`Worker error: ${err.message}`,'red');endSolve();};
   const pixCopy=new Uint8ClampedArray(cleanPx.data);
   worker.postMessage({
-    type:'solve', pix:pixCopy,
-    W:canvas.width, H:canvas.height,
-    sx:startPt.x, sy:startPt.y,
-    ex:endPt.x,   ey:endPt.y,
-    thr:threshold, inv:invert     /* ← NEW: send threshold to worker */
+    type:'solve',pix:pixCopy,
+    W:canvas.width,H:canvas.height,
+    sx:startPt.x,sy:startPt.y,
+    ex:endPt.x,  ey:endPt.y,
+    thr:threshold,inv:invert
   });
 }
 
-/* ── Handle worker messages ── */
-function onMsg({data:msg}) {
-  if (msg.type==='progress') {
+function onMsg({data:msg}){
+  if(msg.type==='progress'){
     visBatches.push(msg.vis);
     totalNodes=msg.total;
-    if (!rafQueued){rafQueued=true; requestAnimationFrame(flushVis);}
+    if(!rafQueued){rafQueued=true;requestAnimationFrame(flushVis);}
 
-  } else if (msg.type==='found') {
+  } else if(msg.type==='found'){
+    /* Simpan jalur untuk fitur Ekspor */
+    lastPath=msg.path;
+
     flushVis(); killWorker();
     const ms=Math.round(performance.now()-solveT0);
     setStat('sNodes',msg.totalVis.toLocaleString());
     setStat('sPath', msg.path.length.toLocaleString());
     setStat('sTime', ms+' ms');
     setProgress(100);
-    setStatus('⚡','Path found! Rendering animation…','cyan');
+    setStatus('⚡','Jalur ditemukan! Merender animasi…','cyan');
+
+    /* Aktifkan tombol Export setelah jalur tersedia */
+    document.getElementById('btnExport').disabled=false;
+
     animatePath(msg.path);
 
-  } else if (msg.type==='notfound') {
+  } else if(msg.type==='notfound'){
     flushVis(); killWorker();
     setStat('sTime',Math.round(performance.now()-solveT0)+' ms');
     setProgress(100);
-    setStatus('❌','No path found — try adjusting the <strong>threshold</strong> in ⚙️ Color Detection.','red');
+    setStatus('❌','Tidak ada jalur — coba ubah <strong>threshold</strong> di panel ⚙️ Deteksi Warna.','red');
     endSolve();
   }
 }
 
-/* ── RAF: flush scan visualization (1× per frame) ── */
-function flushVis() {
+function flushVis(){
   rafQueued=false;
-  if (!visBatches.length) return;
-  const W=canvas.width, H=canvas.height;
-  for (const batch of visBatches) {
-    for (let i=0;i<batch.length;i++) {
+  if(!visBatches.length) return;
+  const W=canvas.width,H=canvas.height;
+  for(const batch of visBatches){
+    for(let i=0;i<batch.length;i++){
       const px=batch[i]*4;
-      overlayPx[px]=251; overlayPx[px+1]=191; overlayPx[px+2]=36; overlayPx[px+3]=155;
+      overlayPx[px]=251;overlayPx[px+1]=191;overlayPx[px+2]=36;overlayPx[px+3]=155;
     }
   }
   visBatches=[];
@@ -1157,29 +1017,28 @@ function flushVis() {
   const pct=Math.min(93,(totalNodes/(canvas.width*canvas.height))*100*4);
   setProgress(pct);
   setStat('sNodes',totalNodes.toLocaleString());
-  setStatus('⚙️',`Scanning… <strong>${totalNodes.toLocaleString()}</strong> nodes.`,'amber');
+  setStatus('⚙️',`Memindai… <strong>${totalNodes.toLocaleString()}</strong> node.`,'amber');
 }
 
-/* ── Animate path ── */
-function animatePath(pathArr) {
-  const W=canvas.width, total=pathArr.length;
+function animatePath(pathArr){
+  const W=canvas.width,total=pathArr.length;
   const step=Math.max(1,Math.ceil(total/90));
   let drawn=0;
-  ctx.lineWidth=Math.max(2.5, Math.min(4, 3/tf.s));
-  ctx.lineJoin='round'; ctx.lineCap='round'; ctx.strokeStyle='#f04090';
+  ctx.lineWidth=Math.max(2.5,Math.min(4,3/tf.s));
+  ctx.lineJoin='round';ctx.lineCap='round';ctx.strokeStyle='#f04090';
 
-  function frame() {
-    if (drawn>=total) {
+  function frame(){
+    if(drawn>=total){
       redrawMarkers();
       const ms=Math.round(performance.now()-solveT0);
-      setStatus('✅',`Done! Length: <strong>${total.toLocaleString()} px</strong> · Time: <strong>${ms} ms</strong>.`,'lime');
-      showProgress(false); endSolve(); return;
+      setStatus('✅',`Selesai! Panjang: <strong>${total.toLocaleString()} px</strong> · Waktu: <strong>${ms} ms</strong>. Klik <strong>⬇ Ekspor PNG</strong> untuk menyimpan.`,'lime');
+      showProgress(false);endSolve();return;
     }
     const end=Math.min(drawn+step,total);
     ctx.beginPath();
     const p0=pathArr[drawn];
     ctx.moveTo(p0%W,(p0/W)|0);
-    for (let i=drawn+1;i<end;i++){const pi=pathArr[i];ctx.lineTo(pi%W,(pi/W)|0);}
+    for(let i=drawn+1;i<end;i++){const pi=pathArr[i];ctx.lineTo(pi%W,(pi/W)|0);}
     ctx.stroke();
     drawn=end;
     requestAnimationFrame(frame);
@@ -1188,93 +1047,156 @@ function animatePath(pathArr) {
 }
 
 /* ═══════════════════════════════════════
-   MODULE 8 — HELPERS
+   MODULE 8 — EXPORT / DOWNLOAD PNG
+
+   Menghasilkan gambar bersih (tanpa overlay
+   kuning scan) berisi:
+   ✓ Gambar labirin asli
+   ✓ Jalur A* (merah muda)
+   ✓ Marker Start (hijau) & End (biru)
+   ✓ Watermark kecil "Maze Solver By Oslo"
 ═══════════════════════════════════════ */
-function drawMarker(x,y,color) {
+function exportSolution(){
+  if(!cleanPx||!lastPath||lastPath.length===0){
+    setStatus('⚠️','Belum ada jalur untuk diekspor. Selesaikan labirin terlebih dahulu.','amber');
+    return;
+  }
+
+  /* Render ke offscreen canvas — gambar bersih tanpa overlay scan */
+  const oc=document.createElement('canvas');
+  oc.width=canvas.width; oc.height=canvas.height;
+  const ox=oc.getContext('2d');
+
+  /* 1. Gambar labirin asli */
+  ox.putImageData(cleanPx,0,0);
+
+  /* 2. Gambar jalur A* */
+  const W=oc.width,total=lastPath.length;
+  ox.lineWidth=3;
+  ox.lineJoin='round';
+  ox.lineCap='round';
+  ox.strokeStyle='#f04090';
+  ox.beginPath();
+  const p0=lastPath[0];
+  ox.moveTo(p0%W,(p0/W)|0);
+  for(let i=1;i<total;i++){
+    const pi=lastPath[i];
+    ox.lineTo(pi%W,(pi/W)|0);
+  }
+  ox.stroke();
+
+  /* 3. Gambar marker Start & End */
+  function markerOn(ctx2,x,y,color){
+    ctx2.save();
+    ctx2.shadowColor=color; ctx2.shadowBlur=14;
+    ctx2.fillStyle=color;
+    ctx2.beginPath(); ctx2.arc(x,y,7,0,Math.PI*2); ctx2.fill();
+    ctx2.shadowBlur=0;
+    ctx2.strokeStyle='rgba(255,255,255,0.6)'; ctx2.lineWidth=1.5; ctx2.stroke();
+    ctx2.restore();
+  }
+  if(startPt) markerOn(ox,startPt.x,startPt.y,'#39d353');
+  if(endPt)   markerOn(ox,endPt.x,  endPt.y,  '#4488ff');
+
+  /* 4. Watermark */
+  ox.save();
+  ox.font=`bold ${Math.max(10,Math.round(oc.width/60))}px Arial,sans-serif`;
+  ox.textAlign='right';
+  ox.textBaseline='bottom';
+  /* Shadow tipis supaya terbaca di background apa pun */
+  ox.shadowColor='rgba(0,0,0,0.7)';
+  ox.shadowBlur=4;
+  ox.fillStyle='rgba(6,214,240,0.75)';
+  ox.fillText('Maze Solver By Oslo',oc.width-8,oc.height-6);
+  ox.restore();
+
+  /* 5. Trigger download */
+  const ts=new Date().toISOString().slice(0,19).replace(/[T:]/g,'-');
+  const link=document.createElement('a');
+  link.download=`maze-solution-by-oslo-${ts}.png`;
+  link.href=oc.toDataURL('image/png');
+  link.click();
+
+  setStatus('⬇',`Gambar diekspor: <strong>maze-solution-by-oslo-${ts}.png</strong>`,'lime');
+}
+
+/* ═══════════════════════════════════════
+   MODULE 9 — HELPERS
+═══════════════════════════════════════ */
+function drawMarker(x,y,color){
   ctx.save();
   ctx.shadowColor=color; ctx.shadowBlur=14;
   ctx.fillStyle=color;
-  ctx.beginPath(); ctx.arc(x,y,7,0,Math.PI*2); ctx.fill();
-  ctx.shadowBlur=0; ctx.strokeStyle='rgba(255,255,255,0.55)'; ctx.lineWidth=1.5; ctx.stroke();
+  ctx.beginPath();ctx.arc(x,y,7,0,Math.PI*2);ctx.fill();
+  ctx.shadowBlur=0;ctx.strokeStyle='rgba(255,255,255,0.55)';ctx.lineWidth=1.5;ctx.stroke();
   ctx.restore();
 }
 
-function redrawMarkers() {
-  if (startPt) drawMarker(startPt.x,startPt.y,'#39d353');
-  if (endPt)   drawMarker(endPt.x,  endPt.y,  '#4488ff');
+function redrawMarkers(){
+  if(startPt) drawMarker(startPt.x,startPt.y,'#39d353');
+  if(endPt)   drawMarker(endPt.x,  endPt.y,  '#4488ff');
 }
 
-function resetPoints() {
-  startPt=null; endPt=null;
+function resetPoints(){
+  startPt=null;endPt=null;lastPath=null;
   previewOn=false;
   document.getElementById('btnPreview').classList.remove('active');
   document.getElementById('previewHint').style.display='none';
-  if (cleanPx) {
+  document.getElementById('btnExport').disabled=true;
+  if(cleanPx){
     overlayPx=new Uint8ClampedArray(cleanPx.data);
     ctx.putImageData(cleanPx,0,0);
   }
-  setStat('sNodes','—'); setStat('sPath','—'); setStat('sTime','—');
+  setStat('sNodes','—');setStat('sPath','—');setStat('sTime','—');
 }
 
-function resetAll() {
-  killWorker(); endSolve(); showProgress(false);
+function resetAll(){
+  killWorker();endSolve();showProgress(false);
   resetPoints();
-  setStatus('ℹ️','Reset. Place a new <strong>START</strong> point on the maze.','cyan');
+  setStatus('ℹ️','Reset. Pasang titik <strong>START</strong> baru di labirin.','cyan');
 }
 
-function endSolve() {
+function endSolve(){
   isSolving=false;
   document.getElementById('shell').classList.remove('solving');
 }
 
-function killWorker() {
-  if (worker){worker.terminate();worker=null;}
-}
-
-function showProgress(on) {
-  document.getElementById('progressTrack').style.display=on?'block':'none';
-}
-
-function setProgress(pct) {
-  document.getElementById('progressFill').style.width=pct+'%';
-}
-
+function killWorker(){if(worker){worker.terminate();worker=null;}}
+function showProgress(on){document.getElementById('progressTrack').style.display=on?'block':'none';}
+function setProgress(pct){document.getElementById('progressFill').style.width=pct+'%';}
 function setStat(id,val){document.getElementById(id).textContent=val;}
 
 const CLR={
-  cyan:  ['var(--cyan)',   'rgba(6,214,240,.2)'],
-  lime:  ['var(--lime)',   'rgba(57,211,83,.2)'],
-  amber: ['var(--amber)',  'rgba(251,191,36,.2)'],
-  red:   ['var(--red)',    'rgba(239,68,68,.2)'],
-  violet:['var(--violet)', 'rgba(167,139,250,.2)'],
+  cyan:  ['var(--cyan)',  'rgba(6,214,240,.2)'],
+  lime:  ['var(--lime)',  'rgba(57,211,83,.2)'],
+  amber: ['var(--amber)', 'rgba(251,191,36,.2)'],
+  red:   ['var(--red)',   'rgba(239,68,68,.2)'],
+  violet:['var(--violet)','rgba(167,139,250,.2)'],
 };
-
-function setStatus(icon,html,color='cyan') {
+function setStatus(icon,html,color='cyan'){
   document.getElementById('statusIcon').textContent=icon;
   document.getElementById('statusText').innerHTML=html;
-  const [clr,bdClr]=CLR[color]||CLR.cyan;
+  const[clr,bdClr]=CLR[color]||CLR.cyan;
   const bar=document.getElementById('statusBar');
-  bar.style.color=clr; bar.style.borderColor=bdClr;
+  bar.style.color=clr;bar.style.borderColor=bdClr;
 }
 
-/* ── Keyboard shortcuts ── */
-document.addEventListener('keydown', e => {
-  if (e.target.tagName==='INPUT') return;
+document.addEventListener('keydown',e=>{
+  if(e.target.tagName==='INPUT') return;
   const k=e.key;
-  if (k==='r'||k==='R') resetAll();
-  if (k==='f'||k==='F') zoomFit();
-  if (k==='p'||k==='P') setMode('pan');
-  if (k==='t'||k==='T') { if (!document.getElementById('btnThresh').disabled) toggleThreshPanel(); }
-  if (k==='Escape')      setMode('place');
-  if (k==='+'||k==='=') doZoom(0.2);
-  if (k==='-')           doZoom(-0.2);
+  if(k==='r'||k==='R') resetAll();
+  if(k==='f'||k==='F') zoomFit();
+  if(k==='p'||k==='P') setMode('pan');
+  if(k==='t'||k==='T'){if(!document.getElementById('btnThresh').disabled)toggleThreshPanel();}
+  if(k==='e'||k==='E'){if(!document.getElementById('btnExport').disabled)exportSolution();}
+  if(k==='Escape')     setMode('place');
+  if(k==='+'||k==='=')doZoom(.2);
+  if(k==='-')          doZoom(-.2);
 });
 
-/* Resize histogram when window changes */
-window.addEventListener('resize', ()=>{
-  if (threshPanelOpen&&histData){ initHistCanvas(); drawHistogram(); }
+window.addEventListener('resize',()=>{
+  if(threshPanelOpen&&histData){initHistCanvas();drawHistogram();}
 });
 </script>
 </body>
 </html>
-
